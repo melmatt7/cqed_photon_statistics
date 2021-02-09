@@ -20,9 +20,9 @@ end
 %GO2=zeros(nck2,nck3);
 GO2=[];
 for i=N:-1:3
-GO2_temp=[genGO_vec(Go,N+1-i),Go(N+1-i)*eye(nchoosek(i-1,2))];
+GO2_temp=[genGO_vec(Go,N+1-i),Go(N+1-i)*eye(nchoosek(i-1,2))]
 
-GO2=flip((catpad(1,flip(GO2,2),flip(GO2_temp,2))),2);
+GO2=flip((catpad(1,flip(GO2,2),flip(GO2_temp,2))),2)
 
 end
 

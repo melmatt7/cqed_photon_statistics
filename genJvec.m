@@ -4,7 +4,7 @@ if N==1
     jvec=[];
     return
 end
-ab=nchoosek(1:N,2);
+ab=nchoosek(1:N,2)
 
 a1 = ab(:,1);
 a2 = ab(:,2);

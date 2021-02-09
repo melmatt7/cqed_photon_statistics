@@ -35,11 +35,11 @@ for i=1:N-2
     J2=flip((catpad(2,flip(J2,1),flip(jt,1))),1);
     J2(isnan(J2))=0;
 end
-% Jtesting = J2;
+Jtesting = J2;
 
-% take lower triangular and make into full matrix
-J2=catpad(1,0,J2);
-J2=catpad(2,J2,0);
-J2(isnan(J2))=0;
-J2=(J2+transpose(J2));
+%take lower triangular and make into full matrix
+% J2=catpad(1,0,J2);
+% J2=catpad(2,J2,0);
+% J2(isnan(J2))=0;
+% J2=(J2+transpose(J2));
 end

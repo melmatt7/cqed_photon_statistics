@@ -18,7 +18,7 @@ catch
     nck3=0;
 end
 %GO=zeros(N*(N-1)/2,N);
-GO=zeros(nck2,nck1);
+%GO=zeros(nck2,nck1);
 
 % 
 % for i=1:N-1
@@ -37,10 +37,10 @@ GO=zeros(nck2,nck1);
 GO=[];
 for i=N-trunc:-1:2
     
-GO_temp=[ones(i-1,1),eye(i-1)];
-GO_temp=[Go(N+2-i:N)',Go(N+1-i)*eye(i-1)];
-
-GO=flip((catpad(1,flip(GO,2),flip(GO_temp,2))),2);
+%GO_temp=[ones(i-1,1),eye(i-1)];
+GO_temp=[zeros(i-1, N-trunc-i),Go(N+2-i:N)',Go(N+1-i)*eye(i-1)];
+%GO=flip((catpad(1,flip(GO,2),flip(GO_temp,2))),2);
+GO = [GO;GO_temp];
 
 end
 
