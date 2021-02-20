@@ -5,8 +5,8 @@ tic
 
 set(groot,'defaultfigureposition',[400 250 900 700])
 showfig1=0;
-showfig2=0;
-showfig3=1; %log
+showfig2=1;
+showfig3=0; %log
 showfig4=0; %time
 
 showg2d=0;
@@ -40,21 +40,29 @@ g=.043;   % emitter linewidth
 Gc=0;   %additional loss channel
 wc=0;  %cavity detuning
 we=0;   %emitter detuning
-J=0;   %dipole-dipole coupling
-jvec=J*ones(1,n*(n-1)/2);
+   
+
 
 go=.32;  %rabi frequency
-Go=go*ones(1,N);
-G=g*ones(1,N);
-K=k*ones(1,N);
-%We=normrnd(mu,sigma,1,N);
-We=we*ones(1,N);
-w=linspace(lim1,lim2,wnum);
+
 
 %% Start of Loop
-%n=[1 10 20 50 100];
-for i = 1:length(n);
-    N=n(i);
+wc_list=[0 5 10];
+we_list=[0 3 10];
+n_list = [5, 20, 50];
+for z = 1:length(we_list)
+    y=1;
+    N=n_list(z);
+    
+    Go=go*ones(1,N);
+    G=g*ones(1,N);
+    K=k*ones(1,N);
+    %We=normrnd(mu,sigma,1,N);
+    We=we_list(1)*ones(1,N);
+    w=linspace(lim1,lim2,wnum);
+    
+    J=0;%dipole-dipole coupling
+    jvec=J.*ones(1,N*(N-1)/2);
 
     %values used to dimension the higher excitation hamiltonians
     nck0=nchoosek(N,0);
@@ -89,7 +97,7 @@ for i = 1:length(n);
     %% First Excitation Subspace
     Heff1=zeros(N+1);
     %cavity loss
-    Heff1(1,1)=wc-1i*k/2; %+1iw comes from the diagonal contribution later
+    Heff1(1,1)=wc_list(y)-1i*k/2; %+1iw comes from the diagonal contribution later
     if N>0
         %atomic coupling
         Heff1(1,2:N+1)=Go;
@@ -122,18 +130,18 @@ for i = 1:length(n);
     if showfig2==1
         Heff2=zeros(1+N*(N+1)/2);
         %cavity loss
-        Heff2(1,1)=2*(wc-1i*k/2); %+1iw comes from the diagonal contribution later
+        Heff2(1,1)=2*(wc_list(y)-1i*k/2); %+1iw comes from the diagonal contribution later
         %atom-cavity coupling
         Heff2(1,2:N+1)=sqrt(2)*Go;
         Heff2(2:N+1,1)=sqrt(2)*Go;
 
         % first set of diagonals
         if N>=1
-            Heff2(2:N+1,2:N+1)=(eye(N)*wc-1i*diag(K)/2)+(diag(We)-1i*diag(G)/2);
+            Heff2(2:N+1,2:N+1)=(eye(N)*wc_list(y)-1i*diag(K)/2)+(diag(We)-1i*diag(G)/2);
         end
         %second set of diagonals
         if N>=1
-            sum(nchoosek((We-1i*ones(1,N)*g/2),2),2)
+            sum(nchoosek((We-1i*ones(1,N)*g/2),2),2);
             Heff2(N+2:end,N+2:end)=diag(sum(nchoosek((We-1i*ones(1,N)*g/2),2),2));
         end
 
@@ -161,6 +169,7 @@ for i = 1:length(n);
             phi2n=[phi2n,phi_temp2];
         end
         phi2v=inv(phi2);
+        phi2n;
         phi2*lambda2m*phi2v;
     end
 
@@ -187,12 +196,12 @@ for i = 1:length(n);
         dim=nck0+nck1+nck2+nck3;
         Heff3=zeros(dim);
         %first diagonal
-        Heff3(1,1)=3*(wc-1i*k/2); 
+        Heff3(1,1)=3*(wc_list(y)-1i*k/2); 
         %second diagonal
-        Heff3(i2:i3-1,i2:i3-1)=2*(eye(N)*wc-1i*diag(K)/2);
+        Heff3(i2:i3-1,i2:i3-1)=2*(eye(N)*wc_list(y)-1i*diag(K)/2);
         Heff3(i2:i3-1,i2:i3-1)=Heff3(i2:i3-1,i2:i3-1)+(diag(We)-1i*diag(G)/2);
         %third diagonal
-        Heff3(i3:i4-1,i3:i4-1)=(eye(i4-i3).*(wc-1i*k/2));
+        Heff3(i3:i4-1,i3:i4-1)=(eye(i4-i3).*(wc_list(y)-1i*k/2));
         Heff3(i3:i4-1,i3:i4-1)=Heff3(i3:i4-1,i3:i4-1)+diag(sum(nchoosek((We-1i*ones(1,N)*g/2),2),2));  %combnk sometimes flips the order and is thus unreliable
         %fourth diagonal
         Heff3(i4:end,i4:end)=diag(sum(nchoosek((We-1i*ones(1,N)*g/2),3),2));
@@ -284,8 +293,11 @@ for i = 1:length(n);
             w=lim1+i*winc;
             %w=2.9;
             %w=0;
+            lambda1m;
+            
             D1num=lambda1m-diag(w*ones(1,N+1));
             D1=diag(diag(D1num).^(-1));   
+            D1;
             D2num=lambda2m-diag(2*w*ones(1,N*(N+1)/2+1));
             D2=diag(diag(D2num).^(-1)); 
             if g3fig==1        
@@ -300,14 +312,14 @@ for i = 1:length(n);
             T(i)=T;
 
             %second order correlation
-
+            j = phi1v*a1'*gnd*gnd'*a1*phi1*D1*phi1v*a1'*a1;
             gw1_diag=diag(phi1v*a1'*gnd*gnd'*a1*phi1*D1*phi1v*a1'*a1*phi1*D1);
 
             W(i)=w;
             fw1_diag=diag(phi1v*a2*phi2*D2*phi2v*a2'*phi1*D1*phi1v*a1'*gnd*gnd'*a1*phi1);
             size(fw1_diag);
             size(gw1_diag);
-            b = ones(1,size(phi1,1))'-exp(-1i*(lambda1-w)*(time));
+            b = (fw1_diag.')*exp(-1i*(lambda1-w)*(time));
             a = gw1_diag.'*(ones(1,size(phi1,1)))';
             fw2(i)=(fw1_diag.')*exp(-1i*(lambda1-w)*(time)) + gw1_diag.'*(ones(1,size(phi1,1))'-exp(-1i*(lambda1-w)*(time)));
 
@@ -322,7 +334,7 @@ for i = 1:length(n);
     if showg2d==1
         figure(2)
         g2wt(g2wt>3)=3;
-        [X,Y] = meshgrid(W-wc,time_vec);
+        [X,Y] = meshgrid(W-wc_list(y),time_vec);
         figure(1)
         contourf(X,Y,g2wt)
         caxis([0 3])
@@ -336,13 +348,13 @@ for i = 1:length(n);
         hold off
         T=k1*k2.*t.*conj(t);
         g2=k1^2*k2^2.*g2w.*conj(g2w)./(T.^2);
-        plot(W-wc,T)
+        plot(W-wc_list(y),T)
         hold on
-        plot(W-wc,g2)
+        plot(W-wc_list(y),g2)
         ylim([0 5])
         if g3fig==1
             g3=k1^3*k2^3.*g3w.*conj(g3w)./(T.^3);
-            plot(W-wc,g3)
+            plot(W-wc_list(y),g3)
         end
         legend('Transmission','g2(0)','g3(0)')
     end
@@ -363,7 +375,7 @@ for i = 1:length(n);
         % Transmission
         for i =1:tnum
             time=0+i*tinc;
-            w=wc+4.5;  %strong coupling
+            w=wc_list(y)+4.5;  %strong coupling
             %w=wc+0.895;  %weak coupling
             %w=wc+0.11;  %weak coupling
             %w=wc+minval;
@@ -406,8 +418,8 @@ for i = 1:length(n);
         % Reflection
         for i =1:tnum
             time=0+i*tinc;
-            w=wc+0; % strong coupling
-            w=wc+0;  % weak coupling
+            w=wc_list(y)+0; % strong coupling
+            w=wc_list(y)+0;  % weak coupling
 
             D1num=lambda1m-diag(w*ones(1,N+1));
             D1=diag(diag(D1num).^(-1));   
@@ -450,6 +462,7 @@ for i = 1:length(n);
     end
 
     if showfig2==1
+        (fw2);
         g2_w=k1^2*k2^2./(T.^2).*fw2.*conj(fw2);
         g2_w_ref=abs(-k1*k2*fw2+4*(tk)+2).^2./(T_2port.^2)/4;
     end
@@ -470,9 +483,11 @@ for i = 1:length(n);
         %plot(W-wc,T2);
         ylim([0 1.2]);
         figure(1)
-        plot(W-wc,T)
+%         subplot(length(n),1,y)
+        subplot(length(wc_list),1,z)
+        plot(W-wc_list(y),T)
         hold on
-        plot(W-wc,T_2port,'red')
+        plot(W-wc_list(y),T_2port,'red')
         xlabel('Frequency')
         ylabel('Transmission Amplitude')
         lgd=legend('Transmission','Reflection');
@@ -482,11 +497,12 @@ for i = 1:length(n);
     if showfig2==1
         figure(2)
         %plot(W-wc,g2_w)
-        plot(W-wc,T,'blue')
+        subplot(length(wc_list),1,z)
+        plot(W-wc_list(y),T,'blue')
         hold on
-        plot(W-wc,T_2port,'red')
-        plot(W-wc,g2_w,'green')
-        plot(W-wc,g2_w_ref,'black')
+        plot(W-wc_list(y),T_2port,'red')
+        plot(W-wc_list(y),g2_w,'green')
+        plot(W-wc_list(y),g2_w_ref,'black')
         ylim([0 2])
         %plot(W-wc,g3)
         %plot(W-wc,T)
@@ -494,7 +510,7 @@ for i = 1:length(n);
         xlabel('Frequency')
         if g3fig==1
             g3=k1^3*k2^3.*g3w.*conj(g3w)./(T.^3);
-            plot(W-wc,g3)
+            plot(W-wc_list(y),g3)
             lgd=legend('Transmitted g2','Transmitted g3');
             lgd.FontSize = 18;
 
@@ -504,13 +520,13 @@ for i = 1:length(n);
 
     if showfig3==1
         figure(3)
-        semilogy(W-wc,real(g2_w))
+        semilogy(W-wc_list(y),real(g2_w))
         ylim([0.1 1e5]);
         hold on
-        semilogy(W-wc,g2_w_ref)
+        semilogy(W-wc_list(y),g2_w_ref)
         hold on
         if g3fig==1
-            semilogy(W-wc,g3)
+            semilogy(W-wc_list(y),g3)
         end
         lgd=legend('Transmission','Reflection')
         lgd.FontSize = 18;
