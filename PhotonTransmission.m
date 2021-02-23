@@ -5,9 +5,9 @@ tic
 
 set(groot,'defaultfigureposition',[400 250 900 700])
 showfig1=0;
-showfig2=1;
+showfig2=0;
 showfig3=0; %log
-showfig4=0; %time
+showfig4=1; %time
 
 showg2d=0;
 Hefft=0;
