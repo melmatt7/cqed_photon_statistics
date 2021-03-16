@@ -4,10 +4,10 @@ clear
 tic
 
 set(groot,'defaultfigureposition',[400 250 900 700])
-showfig1=0;
+showfig1=1;
 showfig2=0;
 showfig3=0; %log
-showfig4=1; %time
+showfig4=0; %time
 
 showg2d=0;
 Hefft=0;
@@ -49,7 +49,7 @@ go=.32;  %rabi frequency
 %% Start of Loop
 wc_list=[0 5 10];
 we_list=[0 3 10];
-n_list = [5, 20, 50];
+n_list = [10, 100, 500];
 for z = 1:length(we_list)
     y=1;
     N=n_list(z);

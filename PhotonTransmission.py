@@ -32,11 +32,11 @@ class PhotonTransmission:
         self.Gc  = sim_params['Gc']    
         self.wc  = sim_params['wc']           
         self.we  = sim_params['we']            
-        self.J   = sim_params['J']
         self.gnd = sim_params['gnd']  
         self.N   = sim_params['N']   
+        self.jvec = sim_params['jvec']
+        self.We = sim_params['We']
 
-        self.jvec = self.J*torch.ones(int(self.N*(self.N-1)/2))
         self.w  = np.linspace(self.lim1, self.lim2, num=self.wnum)
 
         #caching variables
@@ -71,8 +71,10 @@ class PhotonTransmission:
     def calc_first_subspace(self):
         Go = self.go*torch.ones(self.N)
         G = self.g*torch.ones(self.N)
-        We = self.we*torch.ones(self.N)
-        
+        # We = np.random.normal(0, self.g*117, 200)
+        self.We = self.We[0:self.N]
+        # print(We)
+
         self.nck0 = comb(self.N, 0)
         self.nck1 = comb(self.N, 1)
 
@@ -91,9 +93,10 @@ class PhotonTransmission:
             Heff1[1:self.N+2,0] = 1j*Go
 
             # spontaneous emission
-            Heff1[1:self.N+2,1:self.N+2] += (np.diag(We)-1j*np.diag(G)/2)
+            Heff1[1:self.N+2,1:self.N+2] += (np.diag(self.We)-1j*np.diag(G)/2)
 
         J=genJ(self.jvec)
+
         Heff1[1:self.nck0+self.nck1+1,1:self.nck0+self.nck1+1] += J
 
         lambda1, phi1 = la.eig(Heff1)
@@ -109,7 +112,7 @@ class PhotonTransmission:
             w_val = self.lim1+(i+1)*w_inc
             D1 = ((self.lambda1-w_val)**-1)*torch.eye(self.N+1)
 
-            t[i] = 1j*np.transpose(gnd)*self.a1@self.phi1@D1@self.phi1v@np.transpose(self.a1)*gnd
+            t[i] = 1j*np.transpose(gnd)*self.a1@self.phi1@self.phi1@D1@self.phi1v@self.phi1v@np.transpose(self.a1)*gnd
 
         self.T=self.k1*self.k2*t*np.conj(t)
 

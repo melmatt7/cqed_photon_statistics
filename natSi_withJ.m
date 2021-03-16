@@ -107,6 +107,7 @@ eo=8.854e-12;     %permittivity of free space
 er=11.7;          %relative permittivity of silicon
 refractive_index=sqrt(er);       %get refractive index of Si
 u=u/3;    %our factor of 3 difference
+We_vec=normrnd(0,g*117,1,aNumv(end));
 
 w=linspace(lim1,lim2,wnum);
 
