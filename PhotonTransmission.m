@@ -49,7 +49,7 @@ go=.32;  %rabi frequency
 %% Start of Loop
 wc_list=[0 5 10];
 we_list=[0 3 10];
-n_list = [10, 100, 500];
+n_list = [1, 10, 50];
 for z = 1:length(we_list)
     y=1;
     N=n_list(z);

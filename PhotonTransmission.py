@@ -112,7 +112,7 @@ class PhotonTransmission:
             w_val = self.lim1+(i+1)*w_inc
             D1 = ((self.lambda1-w_val)**-1)*torch.eye(self.N+1)
 
-            t[i] = 1j*np.transpose(gnd)*self.a1@self.phi1@self.phi1@D1@self.phi1v@self.phi1v@np.transpose(self.a1)*gnd
+            t[i] = 1j*np.transpose(gnd)*self.a1@self.phi1@D1@self.phi1v@np.transpose(self.a1)*gnd
 
         self.T=self.k1*self.k2*t*np.conj(t)
 
