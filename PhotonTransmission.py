@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import jax
 from math import comb
 import numpy.matlib as mat
@@ -24,18 +25,18 @@ class PhotonTransmission:
         self.time_val = plot_params['time_val'] 
 
         #simulation parameters
-        self.k   = sim_params['k']        
-        self.k1  = sim_params['k1']        
-        self.k2  = sim_params['k2']        
-        self.go  = sim_params['go']          
-        self.g   = sim_params['g']     
-        self.Gc  = sim_params['Gc']    
-        self.wc  = sim_params['wc']           
-        self.we  = sim_params['we']            
-        self.gnd = sim_params['gnd']  
-        self.N   = sim_params['N']   
-        self.jvec = sim_params['jvec']
-        self.We = sim_params['We']
+        self.k       = sim_params['k']        
+        self.k1      = sim_params['k1']        
+        self.k2      = sim_params['k2']        
+        self.go      = sim_params['g']          
+        self.g       = sim_params['gamma']     
+        self.Gc      = sim_params['Gc']    
+        self.wc      = sim_params['wc']           
+        self.we      = sim_params['we']            
+        self.gnd     = sim_params['gnd']  
+        self.N       = sim_params['N']   
+        self.jvec    = sim_params['jvec']
+        self.We      = sim_params['We']
 
         self.w  = np.linspace(self.lim1, self.lim2, num=self.wnum)
 
@@ -144,7 +145,7 @@ class PhotonTransmission:
         Heff2[0,1:self.N+1] = Go*np.sqrt(2)
         Heff2[1:self.N+1,0] = Go*np.sqrt(2)
 
-        if self.N > 0:
+        if self.N >= 1:
             # spontaneous emission
             Heff2[1:self.N+1,1:self.N+1] = (self.wc-1j*self.k/2+(self.we-1j*self.g/2))*torch.eye(self.N)
             comb_vec = torch.tensor([[a[0] + a[1]] for a in combinations((self.we-1j*self.g/2)*torch.ones((self.N,1)),2)])
@@ -172,22 +173,27 @@ class PhotonTransmission:
         fw2 = torch.zeros(self.wnum, dtype=torch.cfloat)
         for i in range(self.wnum):
             w_val = self.lim1+(i+1)*w_inc
-            self.D1 = ((self.lambda1-w_val)**-1)*torch.eye(self.N+1)
-            self.D2 = ((self.lambda2-2*w_val)**-1)*torch.eye(M)
+            D1 = ((self.lambda1-w_val)**-1)*torch.eye(self.N+1)
+            D2 = ((self.lambda2-2*w_val)**-1)*torch.eye(M)
 
+            gw1_diag = torch.diagonal(self.phi1v*np.transpose(self.a1)*self.gnd*self.gnd*self.a1@self.phi1@D1@self.phi1v*np.transpose(self.a1)*self.a1*self.phi1*D1,0)
 
-            gw1_diag = torch.diagonal(self.phi1v*np.transpose(self.a1)*self.gnd*self.gnd*self.a1@self.phi1@self.D1@self.phi1v*np.transpose(self.a1)*self.a1*self.phi1*self.D1,0)
+            fw1_diag = torch.diagonal(self.phi1v@self.a2@self.phi2@D2@self.phi2v@np.transpose(self.a2)@self.phi1@D1@self.phi1v*np.transpose(self.a1)*self.gnd*self.gnd*self.a1@self.phi1,0)
 
-            fw1_diag = torch.diagonal(self.phi1v@self.a2@self.phi2@self.D2@self.phi2v@np.transpose(self.a2)@self.phi1@self.D1@self.phi1v*np.transpose(self.a1)*self.gnd*self.gnd*self.a1@self.phi1,0)
+            # gw1_diag_np = gw1_diag.numpy()
+            # gw1_diag_df = pd.DataFrame(gw1_diag_np)
+            # gw1_diag_df.to_csv('gw1.csv')
+
+            # fw1_diag_np = fw1_diag.numpy()
+            # fw1_diag_df = pd.DataFrame(fw1_diag_np)
+            # fw1_diag_df.to_csv('fw1.csv')
 
             exp_val = torch.exp(-1j*(self.lambda1-w_val)*self.time_val)
-
             
             some_val = torch.ones(1,self.N+1) - exp_val
 
             fw2[i] = torch.dot(fw1_diag, exp_val) + gw1_diag @ some_val.reshape(-1,1)
 
-        val=(self.T**2)*fw2*np.conj(fw2)
         self.g2_w=(self.k1**2*self.k2**2)/(self.T**2)*fw2*np.conj(fw2)
         self.g2_w_ref=np.abs(-self.k1*self.k2*fw2+4*(self.tk)+2)**2/(self.T_2port**2)/4
 

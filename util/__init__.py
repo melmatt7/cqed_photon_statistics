@@ -1,1 +1,0 @@
-from .genGO_vec import genGO
