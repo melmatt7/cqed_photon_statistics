@@ -1,3 +1,5 @@
+% Author: Sebastian Gitt
+
 function [d,costheta,LWoverlap] = calcD(x,y,z,We,g)
 N=length(x);
 

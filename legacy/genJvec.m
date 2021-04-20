@@ -1,3 +1,4 @@
+% Author: Sebastian Gitt
 function [jvec] = genJvec(N)
 
 if N==1

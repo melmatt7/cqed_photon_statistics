@@ -1,3 +1,5 @@
+% Author: Sebastian Gitt
+
 %close all
 %% Initialization
 set(groot,'defaultfigureposition',[400 250 900 700])

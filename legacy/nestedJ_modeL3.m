@@ -1,3 +1,4 @@
+% Author: Sebastian Gitt
 clear
 %close all
 %% Initialization

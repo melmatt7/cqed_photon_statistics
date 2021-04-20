@@ -1,3 +1,4 @@
+% Author: Sebastian Gitt
 function [J] = genJ(jvec)
 nck2=length(jvec);
 nck1=round(sqrt(2*nck2+0.25)+0.5);

@@ -1,3 +1,4 @@
+% Author: Sebastian Gitt
 function [GO] = genGO(Go,trunc)
 N=length(Go);
 

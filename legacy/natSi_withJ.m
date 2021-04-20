@@ -1,3 +1,4 @@
+% Author: Sebastian Gitt
 T=xlsread('ey.xlsx');
 ey=T(536:800,1:266)';
 

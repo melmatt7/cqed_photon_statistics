@@ -1,3 +1,4 @@
+% Author: Sebastian Gitt
 function [J3] = genJ3(jvec)
 
 nck2=length(jvec);

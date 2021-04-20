@@ -1,3 +1,4 @@
+% Author: Sebastian Gitt
 function [GO2] = genGO_2(Go)
 N=length(Go);
 
