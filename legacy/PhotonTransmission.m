@@ -50,7 +50,7 @@ go=.32;  %rabi frequency
 %% Start of Loop
 wc_list=[0 5 10];
 we_list=[0 3 10];
-n_list = [1, 10, 50];
+n_list = [1, 10, 100];
 for z = 1:length(we_list)
     y=1;
     N=n_list(z);
@@ -486,29 +486,35 @@ for z = 1:length(we_list)
         figure(1)
 %         subplot(length(n),1,y)
         subplot(length(wc_list),1,z)
-        plot(W-wc_list(y),T)
+        plot(W-wc_list(y),T,'LineWidth',4)
         hold on
-        plot(W-wc_list(y),T_2port,'red')
+        plot(W-wc_list(y),T_2port,'red','LineWidth',4)
         xlabel('Frequency')
-        ylabel('Transmission Amplitude')
-        lgd=legend('Transmission','Reflection');
-        lgd.FontSize = 18;
+
+        set(gca,'FontSize',24)
+        set(gcf,'position',[10,10,750,1500])
+        %plot(W-wc,g3)
+        %plot(W-wc,T)
+        legend('Transmission','Reflection', 'FontSize', 24)
+        xlabel('Frequency', 'FontSize', 24)
     end
 
     if showfig2==1
         figure(2)
         %plot(W-wc,g2_w)
         subplot(length(wc_list),1,z)
-        plot(W-wc_list(y),T,'blue')
+        plot(W-wc_list(y),T,'blue','LineWidth',4)
         hold on
-        plot(W-wc_list(y),T_2port,'red')
-        plot(W-wc_list(y),g2_w,'green')
-        plot(W-wc_list(y),g2_w_ref,'black')
+        plot(W-wc_list(y),T_2port,'red','LineWidth',4)
+        plot(W-wc_list(y),g2_w,'blue','LineWidth',4)
+        plot(W-wc_list(y),g2_w_ref,'red','LineWidth',4)
         ylim([0 2])
+        set(gca,'FontSize',24)
+        set(gcf,'position',[10,10,750,1500])
         %plot(W-wc,g3)
         %plot(W-wc,T)
-        legend('Transmission','Reflection')
-        xlabel('Frequency')
+        legend('Transmission','Reflection', 'FontSize', 24)
+        xlabel('Frequency', 'FontSize', 24)
         if g3fig==1
             g3=k1^3*k2^3.*g3w.*conj(g3w)./(T.^3);
             plot(W-wc_list(y),g3)

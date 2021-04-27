@@ -59,7 +59,7 @@ refractive_index=sqrt(er);       %get refractive index of Si
 
 w=linspace(lim1,lim2,wnum);
 
-n=[1 10 100 200];
+n=[1 10 100];
 
 We_vec=normrnd(0,g*117,1,n(end));
 X=normrnd(0,10e-9,1,n(end));
@@ -76,7 +76,7 @@ J_vec3=u^2/(4*pi*eo)./d.^3.*(1-3*costheta.^2)*6.2e18*1e6; %joule to uev
 J_vec=[J_vec1,J_vec2,J_vec3];
 
 %% Start of Loop
-for jcase = 1:2
+for jcase = 2
 for index1 = 1:length(n);
 N=n(index1);
 
@@ -215,13 +215,18 @@ T_2port=(tk+1).*conj(tk+1);
 %plot(W-wc,T.*conj(T))
 %hold on
 %plot(W-wc,T_2port.*conj(T_2port))
-
+set(gca,'FontSize',24)
+set(gcf,'position',[10,10,750,1500])
 %legend(sprintf('%d atoms', N));
 plotNum=length(n);
 hold on
-subplot(plotNum,2,(index1-1)*2+jcase)
-plot(W-wc,T.*conj(T))
+subplot(plotNum,1,(index1))
+plot(W-wc,T.*conj(T),'linewidth',2)
 legend(sprintf('%d atoms', N));
+lgd.FontSize = 24;
+xlabel('(\omega-\omega_c)','FontSize',30)
+set(gca,'FontSize',24)
+set(gcf,'position',[10,10,750,1500])
 
 end
 

@@ -137,7 +137,7 @@ end
 if ccount==2
 [d,costheta,LWoverlap]=calcD(X,Y,Z,We_vec,g);
 
-jvec=LWoverlap'.*u^2/(4*pi*eo)./d.^3.*(1-3*costheta.^2)*6.2e18*1e6 %joule to uev
+jvec=LWoverlap'.*u^2/(4*pi*eo)./d.^3.*(1-3*costheta.^2)*6.2e18*1e6; %joule to uev
 
 %Dipole-dipole coupling
 %jvec=J*ones(1,nck2);

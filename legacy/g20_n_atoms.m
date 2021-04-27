@@ -44,7 +44,7 @@ N=n;
 
 
 %% Start of Loop
-n=[5];
+n=[1, 10, 50];
 for n_index = 1:length(n);
 N=n(n_index);
 
@@ -479,6 +479,8 @@ end
 color2=get(gca,'ColorOrder')
 allOneString = sprintf('%f,' , color2(n_index,:));
 allOneString = allOneString(1:end-1);% strip final comma
+set(gca,'FontSize',24)
+set(gcf,'position',[10,10,750,750])
 
 if showfig1==1
     figure(1)
@@ -494,18 +496,18 @@ end
 if showfig2==1
     figure(1)
     %plot(W-wc,g2_w)
-    h=plot(W-wc,T,'linewidth',1.8,'LineStyle','--','color',color2(n_index,:))
+    h=plot(W-wc,T,'linewidth',4,'LineStyle','--','color',color2(n_index,:))
     h.Annotation.LegendInformation.IconDisplayStyle = 'off';
     hold on
     %plot(W-wc,T_2port,'red')
-    plot(W-wc,g2_w,'linewidth',1.8,'color',color2(n_index,:))
+    plot(W-wc,g2_w,'linewidth',4,'color',color2(n_index,:))
     %plot(W-wc,g2_w_ref,'red')
     ylim([0 3])
     %plot(W-wc,g3)
     %plot(W-wc,T)
     lgd=legend('1 atom','10 atoms','50 atoms')
     lgd.FontSize = 24;
-    xlabel('(\omega-\omega_c)/\kappa','FontSize',24)
+    xlabel('(\omega-\omega_c)/\kappa','FontSize',30)
     if g3fig==1
         g3=k1^3*k2^3.*g3w.*conj(g3w)./(T.^3);
         plot(W-wc,g3)
@@ -513,8 +515,6 @@ if showfig2==1
         lgd.FontSize = 24;
 
     end
-    set(gca,'FontSize',18)
-
 end
 
 if showfig3==1

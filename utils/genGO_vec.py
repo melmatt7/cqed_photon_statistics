@@ -5,6 +5,8 @@ import torch
 def genGO(Go, trunc=0):
     os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
     N = len(Go)
+    if N == 1:
+        return np.zeros((1,1))
 
     for i in range(N-trunc-1, 0, -1):
         if N-trunc-1-i > 0:

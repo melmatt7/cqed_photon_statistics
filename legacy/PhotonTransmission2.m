@@ -3,8 +3,8 @@ clear
 %close all
 %% Initialization
 set(groot,'defaultfigureposition',[400 250 900 700])
-showfig1=1;
-showfig2=0;
+showfig1=0;
+showfig2=1;
 showfig3=0; %log
 showfig4=0; %time
 
@@ -29,7 +29,7 @@ wnum=5000;
 minval=6.66;
 time=0;
 
-n=500;
+n=5;
 N=n;
 
 k=43;   %  4.3 - Q~100,000 , 43 - Q~10,000  %cavity linewidth
@@ -51,7 +51,7 @@ We=we*ones(1,N);
 w=linspace(lim1,lim2,wnum);
 
 %% Start of Loop
-%n=[1 10 20 50 100];
+%n=[1 10 20 50 100]
 for i = 1:length(n);
 N=n(i);
 
@@ -72,9 +72,9 @@ end
 %% creation/annihilation operators
 gnd=1;
 a1=[1,zeros(1,N)];
-% a2=[eye(N+1),repmat(zeros(1,N+1)',1,nck2)];
-% a2(1)=a2(1)*sqrt(2);
-% 
+a2=[eye(N+1),repmat(zeros(1,N+1)',1,nck2)];
+a2(1)=a2(1)*sqrt(2);
+
 % a3=zeros(nck0+nck1+nck2,nck0+nck1+nck2+nck3);
 % a3(1,1)=sqrt(3);
 % a3(2:(nck1+nck0),2:(nck1+nck0))=eye(nck1)*(sqrt(2));
