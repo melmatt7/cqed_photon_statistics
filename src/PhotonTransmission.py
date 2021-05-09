@@ -64,160 +64,51 @@ class PhotonTransmission:
         self.second_subspace = None
         self.third_subspace  = None
 
-    def calc_first_subspace(self):
-        Go = self.go*torch.ones(self.N)
-        G = self.g*torch.ones(self.N)
-        # We = np.random.normal(0, self.g*117, 200)
-        self.We = self.We[0:self.N]
-        # print(We)
-
-        self.nck0 = comb(self.N, 0)
-        self.nck1 = comb(self.N, 1)
-
-        # creation/annihilation operators
-        gnd = 1
-        self.a1 = torch.cat((torch.tensor([1]),torch.zeros(self.N, dtype=torch.cfloat)))
-
-        ## First Excitation Subspace
-        Heff1=torch.zeros(self.N+1,self.N+1, dtype=torch.cfloat)
-        # cavity loss
-        Heff1[0,0]= self.wc - 1j*self.k/2 #+1iw comes from the diagonal contribution later
-
-        if self.N > 0:
-            # atomic coupling
-            Heff1[0,1:self.N+2] = -1j*Go
-            Heff1[1:self.N+2,0] = 1j*Go
-
-            # spontaneous emission
-            Heff1[1:self.N+2,1:self.N+2] += (np.diag(self.We)-1j*np.diag(G)/2)
-
-        J=genJ(self.jvec)
-
-        Heff1[1:self.nck0+self.nck1+1,1:self.nck0+self.nck1+1] += J
-
-        lambda1, phi1 = la.eig(Heff1)
-        self.lambda1 = torch.from_numpy(lambda1)
-        self.phi1 = torch.from_numpy(phi1)
-        phi1v = la.inv(phi1)
-        self.phi1v = torch.from_numpy(phi1v)
-
-
-        w_inc = (self.lim2-self.lim1)/self.wnum
-        t = torch.zeros(self.wnum, dtype=torch.cfloat)
-        for i in range(0,self.wnum):
-            w_val = self.lim1+(i+1)*w_inc
-            D1 = ((self.lambda1-w_val)**-1)*torch.eye(self.N+1)
-
-            t[i] = 1j*np.transpose(gnd)*self.a1@self.phi1@D1@self.phi1v@np.transpose(self.a1)*gnd
-
-        self.T=self.k1*self.k2*t*np.conj(t)
-
-        self.tk=np.sqrt(self.k1*self.k2)*t
-        self.T_2port=(self.tk+1)*np.conj(self.tk+1)
-
-        return self.w, self.T, self.T_2port
-
     # def calc_first_subspace(self):
-        
-
     #     Go = self.go*torch.ones(self.N)
     #     G = self.g*torch.ones(self.N)
-    #     # K = self.k*torch.ones(self.N)
-    #     We = self.we*torch.ones(self.N)
-        
+    #     # We = np.random.normal(0, self.g*117, 200)
+    #     self.We = self.We[0:self.N]
+    #     # print(We)
 
-    #     # values used to dimension the higher excitation hamiltonians
     #     self.nck0 = comb(self.N, 0)
     #     self.nck1 = comb(self.N, 1)
-
-    #     try:
-    #         self.nck2 = comb(self.N,2)
-    #     except:
-    #         self.nck2 = 0
-
-    #     try:
-    #         self.nck3 = comb(self.N,3)
-    #     except:
-    #         self.nck3 = 0
 
     #     # creation/annihilation operators
     #     gnd = 1
     #     self.a1 = torch.cat((torch.tensor([1]),torch.zeros(self.N, dtype=torch.cfloat)))
-    #     # a2 = np.hstack((np.eye(self.N+1), mat.repmat(np.zeros((self.N+1, 1)), 1, nck2)))
-    #     # a2[1] = a2[1]*np.sqrt(2)
-
-    #     # a3 = np.zeros((nck0+nck1+nck2,nck0+nck1+nck2+nck3))
-    #     # a3[0,0] = np.sqrt(3)
-    #     # a3[1:(nck1+nck0),1:(nck1+nck0)] = np.eye(nck1)*(np.sqrt(2))
-    #     # a3[nck0+nck1:nck0+nck1+nck2,nck0+nck1:nck0+nck1+nck2] = np.eye(nck2)
-
-    #     # ## Zeroth excitation subspace
-    #     # Heff0=0
 
     #     ## First Excitation Subspace
     #     Heff1=torch.zeros(self.N+1,self.N+1, dtype=torch.cfloat)
     #     # cavity loss
     #     Heff1[0,0]= self.wc - 1j*self.k/2 #+1iw comes from the diagonal contribution later
-    #     # jax.ops.index_update(Heff1, jax.ops.index[0,0], wc - 1j*k/2)
 
     #     if self.N > 0:
     #         # atomic coupling
-    #         Heff1[0,1:self.N+2] = Go
-    #         # jax.ops.index_update(Heff1, jax.ops.index[0,1:self.N+2], Go)
-    #         Heff1[1:self.N+2,0] = Go
-    #         # jax.ops.index_update(Heff1, jax.ops.index[1:self.N+2,0], Go)
+    #         Heff1[0,1:self.N+2] = -1j*Go
+    #         Heff1[1:self.N+2,0] = 1j*Go
 
     #         # spontaneous emission
-    #         Heff1[1:self.N+2,1:self.N+2] += (np.diag(We)-1j*np.diag(G)/2)
-    #         # jax.ops.index_add(Heff1, jax.ops.index[1:self.N+2,1:self.N+2], (np.diag(We)-1j*np.diag(G)/2))
+    #         Heff1[1:self.N+2,1:self.N+2] += (np.diag(self.We)-1j*np.diag(G)/2)
 
     #     J=genJ(self.jvec)
-    #     Heff1[1:self.nck0+self.nck1+1,1:self.nck0+self.nck1+1] += J
-    #     # print(Heff1)
 
-    #     # jax.ops.index_add(Heff1, jax.ops.index[1:nck0+nck1+1,1:nck0+nck1+1], J)
-    #     # print(Heff1)
-    #     # unsorted phi1
-    #     # print(Heff1)
+    #     Heff1[1:self.nck0+self.nck1+1,1:self.nck0+self.nck1+1] += J
+
     #     lambda1, phi1 = la.eig(Heff1)
     #     self.lambda1 = torch.from_numpy(lambda1)
     #     self.phi1 = torch.from_numpy(phi1)
-    #     # print(phi1)
     #     phi1v = la.inv(phi1)
     #     self.phi1v = torch.from_numpy(phi1v)
-    #     # norm=la.norm(phi1, axis=0)
-    #     # tol = 10e-5
-    #     # a = phi1@np.diag(lambda1)@phi1v
-    #     # a.real[abs(a.real) < tol] = 0.0
-    #     # a.imag[abs(a.imag) < tol] = 0.0
-    #     # print(a)
+
 
     #     w_inc = (self.lim2-self.lim1)/self.wnum
     #     t = torch.zeros(self.wnum, dtype=torch.cfloat)
     #     for i in range(0,self.wnum):
     #         w_val = self.lim1+(i+1)*w_inc
     #         D1 = ((self.lambda1-w_val)**-1)*torch.eye(self.N+1)
-    #         # print(D1)
-    #         # Transmission
-    #         # current_time = time.time()
 
-    #         inter3 = torch.matmul(self.a1,self.phi1)
-    #         # time3 = time.time()
-    #         # print("time3:", time3-current_time)
-
-    #         inter2 = torch.matmul(inter3,D1)
-    #         # time2 = time.time()
-    #         # print("time2:", time2-time3)
-
-    #         inter1 = torch.matmul(inter2,self.phi1v)
-    #         # time1 = time.time()
-    #         # print("time1:", time1-time2)
-
-    #         inter0 = torch.matmul(inter1,np.transpose(self.a1))
-    #         # time0 = time.time()
-    #         # print("time0:", time0-time1)
-    #         t[i] = 1j*np.transpose(gnd)*inter0*gnd
-    #         # jax.ops.index_update(t, jax.ops.index[i], 1j*np.transpose(gnd)*inter0*gnd)
+    #         t[i] = 1j*np.transpose(gnd)*self.a1@self.phi1@D1@self.phi1v@np.transpose(self.a1)*gnd
 
     #     self.T=self.k1*self.k2*t*np.conj(t)
 
@@ -225,6 +116,115 @@ class PhotonTransmission:
     #     self.T_2port=(self.tk+1)*np.conj(self.tk+1)
 
     #     return self.w, self.T, self.T_2port
+
+    def calc_first_subspace(self):
+        
+
+        Go = self.go*torch.ones(self.N)
+        G = self.g*torch.ones(self.N)
+        # K = self.k*torch.ones(self.N)
+        We = self.we*torch.ones(self.N)
+        
+
+        # values used to dimension the higher excitation hamiltonians
+        self.nck0 = comb(self.N, 0)
+        self.nck1 = comb(self.N, 1)
+
+        try:
+            self.nck2 = comb(self.N,2)
+        except:
+            self.nck2 = 0
+
+        try:
+            self.nck3 = comb(self.N,3)
+        except:
+            self.nck3 = 0
+
+        # creation/annihilation operators
+        gnd = 1
+        self.a1 = torch.cat((torch.tensor([1]),torch.zeros(self.N, dtype=torch.cfloat)))
+        # a2 = np.hstack((np.eye(self.N+1), mat.repmat(np.zeros((self.N+1, 1)), 1, nck2)))
+        # a2[1] = a2[1]*np.sqrt(2)
+
+        # a3 = np.zeros((nck0+nck1+nck2,nck0+nck1+nck2+nck3))
+        # a3[0,0] = np.sqrt(3)
+        # a3[1:(nck1+nck0),1:(nck1+nck0)] = np.eye(nck1)*(np.sqrt(2))
+        # a3[nck0+nck1:nck0+nck1+nck2,nck0+nck1:nck0+nck1+nck2] = np.eye(nck2)
+
+        # ## Zeroth excitation subspace
+        # Heff0=0
+
+        ## First Excitation Subspace
+        Heff1=torch.zeros(self.N+1,self.N+1, dtype=torch.cfloat)
+        # cavity loss
+        Heff1[0,0]= self.wc - 1j*self.k/2 #+1iw comes from the diagonal contribution later
+        # jax.ops.index_update(Heff1, jax.ops.index[0,0], wc - 1j*k/2)
+
+        if self.N > 0:
+            # atomic coupling
+            Heff1[0,1:self.N+2] = Go
+            # jax.ops.index_update(Heff1, jax.ops.index[0,1:self.N+2], Go)
+            Heff1[1:self.N+2,0] = Go
+            # jax.ops.index_update(Heff1, jax.ops.index[1:self.N+2,0], Go)
+
+            # spontaneous emission
+            Heff1[1:self.N+2,1:self.N+2] += (np.diag(We)-1j*np.diag(G)/2)
+            # jax.ops.index_add(Heff1, jax.ops.index[1:self.N+2,1:self.N+2], (np.diag(We)-1j*np.diag(G)/2))
+
+        J=genJ(self.jvec)
+        Heff1[1:self.nck0+self.nck1+1,1:self.nck0+self.nck1+1] += J
+        # print(Heff1)
+
+        # jax.ops.index_add(Heff1, jax.ops.index[1:nck0+nck1+1,1:nck0+nck1+1], J)
+        # print(Heff1)
+        # unsorted phi1
+        # print(Heff1)
+        lambda1, phi1 = la.eig(Heff1)
+        self.lambda1 = torch.from_numpy(lambda1)
+        self.phi1 = torch.from_numpy(phi1)
+        # print(phi1)
+        phi1v = la.inv(phi1)
+        self.phi1v = torch.from_numpy(phi1v)
+        # norm=la.norm(phi1, axis=0)
+        # tol = 10e-5
+        # a = phi1@np.diag(lambda1)@phi1v
+        # a.real[abs(a.real) < tol] = 0.0
+        # a.imag[abs(a.imag) < tol] = 0.0
+        # print(a)
+
+        w_inc = (self.lim2-self.lim1)/self.wnum
+        t = torch.zeros(self.wnum, dtype=torch.cfloat)
+        for i in range(0,self.wnum):
+            w_val = self.lim1+(i+1)*w_inc
+            D1 = ((self.lambda1-w_val)**-1)*torch.eye(self.N+1)
+            # print(D1)
+            # Transmission
+            # current_time = time.time()
+
+            inter3 = torch.matmul(self.a1,self.phi1)
+            # time3 = time.time()
+            # print("time3:", time3-current_time)
+
+            inter2 = torch.matmul(inter3,D1)
+            # time2 = time.time()
+            # print("time2:", time2-time3)
+
+            inter1 = torch.matmul(inter2,self.phi1v)
+            # time1 = time.time()
+            # print("time1:", time1-time2)
+
+            inter0 = torch.matmul(inter1,np.transpose(self.a1))
+            # time0 = time.time()
+            # print("time0:", time0-time1)
+            t[i] = 1j*np.transpose(gnd)*inter0*gnd
+            # jax.ops.index_update(t, jax.ops.index[i], 1j*np.transpose(gnd)*inter0*gnd)
+
+        self.T=self.k1*self.k2*t*np.conj(t)
+
+        self.tk=np.sqrt(self.k1*self.k2)*t
+        self.T_2port=(self.tk+1)*np.conj(self.tk+1)
+
+        return self.w, self.T, self.T_2port
 
     def calc_second_subspace(self):
         Go = self.go*torch.ones(self.N)

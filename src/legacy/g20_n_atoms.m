@@ -502,7 +502,7 @@ if showfig2==1
     %plot(W-wc,T_2port,'red')
     plot(W-wc,g2_w,'linewidth',4,'color',color2(n_index,:))
     %plot(W-wc,g2_w_ref,'red')
-    ylim([0 3])
+    ylim([0 2])
     %plot(W-wc,g3)
     %plot(W-wc,T)
     lgd=legend('1 atom','10 atoms','50 atoms')
