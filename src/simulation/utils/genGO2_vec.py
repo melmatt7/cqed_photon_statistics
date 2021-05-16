@@ -1,6 +1,6 @@
 import numpy as np
 from math import comb
-from utils import genGO
+from simulation.utils import genGO
 
 def genGO2(Go, trunc=0):
     N = len(Go)

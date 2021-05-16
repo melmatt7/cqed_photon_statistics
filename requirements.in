@@ -1,0 +1,6 @@
+numpy
+torch
+matplotlib
+qnet
+scipy
+ipykernel
