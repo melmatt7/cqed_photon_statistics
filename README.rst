@@ -12,11 +12,6 @@ cqed_sims
 
 cavity quantum electrodynamic system simulations
 
-Requirements
-------------
-
-Python 3.6+.
-
 Installation
 ---------------
 
@@ -27,8 +22,13 @@ Windows users typically access Python through the
 link in their ``PATH``. Within a virtual environment,  or when using conda, all platforms operate the same and use a
 ``python`` link to access the Python version used in that virtual environment.
 
+Requirements
+^^^^^^^^^^^^
+
+Python 3.6+.
+
 Dependencies
-------------
+^^^^^^^^^^^^
 
 Dependencies are defined in:
 
