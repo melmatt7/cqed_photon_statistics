@@ -10,21 +10,12 @@ cqed_sims
 .. image:: https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336
     :target: https://timothycrosley.github.io/isort/
 
-Example Python project that demonstrates how to create a tested Python package using the latest
-Python testing and linting tooling. The project contains a ``fact`` package that provides a
-simple implementation of the `factorial algorithm <https://en.wikipedia.org/wiki/Factorial>`_
-(``fact.lib``) and a command line interface (``fact.cli``).
+cavity quantum electrodynamic system simulations
 
 Requirements
 ------------
 
 Python 3.6+.
-
-.. note::
-
-    Because `Python 2.7 support ended January 1, 2020 <https://pythonclock.org/>`_, new projects
-    should consider supporting Python 3 only, which is simpler than trying to support both.
-    As a result, support for Python 2.7 in this example project has been dropped.
 
 Windows Support
 ---------------
