@@ -17,11 +17,11 @@ Requirements
 
 Python 3.6+.
 
-Windows Support
+Installation
 ---------------
 
 Summary: On Windows, use ``py`` instead of ``python3`` for many of the examples in this
-documentation.
+documentation. If using conda, no modification is required.
 
 This package fully supports Windows, along with Linux and macOS, but Python is typically
 `installed differently on Windows <https://docs.python.org/3/using/windows.html>`_.
@@ -55,7 +55,6 @@ On \*Nix:
 
 .. code-block:: bash
 
-    # On Python 3.9+, add --upgrade-deps
     $ python3 -m venv venv
     $ source venv/bin/activate
 
@@ -73,3 +72,32 @@ Once activated, it is good practice to update core packaging tools (``pip``, ``s
 
     (venv) $ python -m pip install --upgrade pip setuptools wheel
 
+Locking Dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This project uses `pip-tools <https://github.com/jazzband/pip-tools>`_ to lock project
+dependencies and create reproducible virtual environments.
+
+**Note:** *Library* projects should not lock their ``requirements.txt``. Since ``python-blueprint``
+also has a CLI application, this end-user application example is used to demonstrate how to
+lock application dependencies.
+
+To update dependencies:
+
+.. code-block:: bash
+
+    (venv) $ python -m pip install pip-tools
+    (venv) $ python -m piptools compile --upgrade requirements.in
+    (venv) $ python -m piptools compile --upgrade dev-requirements.in
+
+After upgrading dependencies, run the unit tests as described in the `Unit Testing`_ section
+to ensure that none of the updated packages caused incompatibilities in the current project.
+
+Syncing Virtual Environments
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To cleanly install your dependencies into your virtual environment:
+
+.. code-block:: bash
+
+    (venv) $ python -m piptools sync requirements.txt dev-requirements.txt
