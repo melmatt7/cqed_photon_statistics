@@ -20,14 +20,11 @@ Python 3.6+.
 Installation
 ---------------
 
-Summary: On Windows, use ``py`` instead of ``python3`` for many of the examples in this
-documentation. If using conda, no modification is required.
-
 This package fully supports Windows, along with Linux and macOS, but Python is typically
 `installed differently on Windows <https://docs.python.org/3/using/windows.html>`_.
 Windows users typically access Python through the
 `py <https://www.python.org/dev/peps/pep-0397/>`_ launcher rather than a ``python3``
-link in their ``PATH``. Within a virtual environment, all platforms operate the same and use a
+link in their ``PATH``. Within a virtual environment,  or when using conda, all platforms operate the same and use a
 ``python`` link to access the Python version used in that virtual environment.
 
 Dependencies
