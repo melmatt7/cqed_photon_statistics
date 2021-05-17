@@ -6,6 +6,8 @@
 #
 backcall==0.2.0
     # via ipython
+colorama==0.4.4
+    # via ipython
 cycler==0.10.0
     # via matplotlib
 decorator==5.0.9
@@ -41,8 +43,6 @@ numpy==1.20.3
     #   torch
 parso==0.8.2
     # via jedi
-pexpect==4.8.0
-    # via ipython
 pickleshare==0.7.5
     # via ipython
 pillow==8.2.0
@@ -51,8 +51,6 @@ ply==3.11
     # via qnet
 prompt-toolkit==3.0.18
     # via ipython
-ptyprocess==0.7.0
-    # via pexpect
 pygments==2.9.0
     # via ipython
 pyparsing==2.4.7
@@ -61,6 +59,8 @@ python-dateutil==2.8.1
     # via
     #   jupyter-client
     #   matplotlib
+pywin32==300
+    # via jupyter-core
 pyzmq==22.0.3
     # via jupyter-client
 qnet==1.4.3
